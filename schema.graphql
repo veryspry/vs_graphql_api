@@ -1,0 +1,66 @@
+input CreateSummaryInput {
+  summary: String!
+}
+
+input DeleteSummaryInput {
+  id: String!
+}
+
+input DeleteVSSummaryInput {
+  id: String!
+}
+
+type Mutation {
+  createSummary(input: CreateSummaryInput!): Summary
+  updateSummary(input: UpdateSummaryInput!): Summary
+  deleteVSSummary(input: DeleteSummaryInput!): Summary
+}
+
+type Query {
+  getSummary(id: ID!): Summary
+  listSummaries(
+    filter: TableSummaryFilterInput
+    limit: Int
+    nextToken: String
+  ): SummaryConnection
+}
+
+type Summary {
+  id: String!
+  summary: String!
+  created: AWSDateTime!
+  updated: AWSDateTime
+  deleted: AWSDateTime
+}
+
+type SummaryConnection {
+  items: [Summary!]
+  nextToken: String
+}
+
+input TableStringFilterInput {
+  ne: String
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  contains: String
+  notContains: String
+  between: [String]
+  beginsWith: String
+}
+
+input TableSummaryFilterInput {
+  id: TableStringFilterInput
+  summary: TableStringFilterInput
+}
+
+input UpdateSummaryInput {
+  id: String!
+}
+
+schema {
+  query: Query
+  mutation: Mutation
+}
