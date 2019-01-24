@@ -1,19 +1,90 @@
+type Coffee {
+  id: ID!
+  country: String!
+  name: String!
+  roaster: String!
+  varietal: String
+  processType: String
+  summaryID: ID!
+  created: AWSDateTime!
+  updated: AWSDateTime!
+  deleted: AWSDateTime!
+}
+
+type CoffeeConnection {
+  items: [Coffee]!
+  nextToken: String
+}
+
+input CreateCoffeeInput {
+  country: String
+  name: String
+  roaster: String
+  varietal: String
+  processType: String
+  summaryID: ID
+}
+
+input CreateMusicInput {
+  album: String
+  artist: String
+  song: String
+  isAlbum: Boolean
+  summaryID: ID
+}
+
+input CreateResourceInput {
+  display: String
+  url: String
+  summaryID: ID
+}
+
 input CreateSummaryInput {
   summary: String!
+}
+
+input DeleteByIDInput {
+  id: ID
+}
+
+input DeleteCoffeeInput {
+  id: ID
 }
 
 input DeleteSummaryInput {
   id: String!
 }
 
-input DeleteVSSummaryInput {
-  id: String!
+type Music {
+  id: ID!
+  album: String
+  artist: String!
+  song: String
+  summaryID: ID!
+  isAlbum: Boolean!
+  created: AWSDateTime!
+  updated: AWSDateTime!
+  deleted: AWSDateTime!
+}
+
+type MusicConnection {
+  items: [Music!]!
+  nextToken: String
 }
 
 type Mutation {
   createSummary(input: CreateSummaryInput!): Summary
   updateSummary(input: UpdateSummaryInput!): Summary
-  deleteVSSummary(input: DeleteSummaryInput!): Summary
+  deleteSummary(input: DeleteByIDInput!): Summary
+  createCoffee(input: CreateCoffeeInput!): Coffee
+  updateCoffee(input: UpdateCoffeeInput!): Coffee
+  deleteCoffee(input: DeleteByIDInput!): Coffee
+  createResource(input: CreateResourceInput!): Resource
+  updateResource(input: UpdateResourceInput!): Resource
+  deleteResource(input: DeleteByIDInput!): Resource
+  createMusic(input: CreateMusicInput!): Music
+  updateMusic(input: UpdateMusicInput!): Music
+  deleteMusic(input: DeleteByIDInput!): Music
 }
 
 type Query {
@@ -23,6 +94,39 @@ type Query {
     limit: Int
     nextToken: String
   ): SummaryConnection
+  getCoffee(id: ID!): Coffee
+  listCoffees(
+    filter: TableCoffeeFitlerInput
+    limit: Int
+    nextToken: String
+  ): CoffeeConnection
+  getResource(id: ID!): Resource
+  listResources(
+    filter: TableResourceFilterInput
+    limit: Int
+    nextToken: String
+  ): ResourceConnection
+  getMusic(id: ID!): Music
+  listMusic(
+    filter: TableMusicFilterInput
+    limit: Int
+    nextToken: String
+  ): MusicConnection
+}
+
+type Resource {
+  id: ID!
+  display: String!
+  url: String!
+  summaryID: ID!
+  created: AWSDateTime!
+  updated: AWSDateTime!
+  deleted: AWSDateTime!
+}
+
+type ResourceConnection {
+  items: [Resource!]!
+  nextToken: String
 }
 
 type Summary {
@@ -31,11 +135,29 @@ type Summary {
   created: AWSDateTime!
   updated: AWSDateTime
   deleted: AWSDateTime
+  coffee: [Coffee]!
+  resources: [Resource]!
+  music: [Music]!
 }
 
 type SummaryConnection {
-  items: [Summary!]
+  items: [Summary!]!
   nextToken: String
+}
+
+input TableCoffeeFitlerInput {
+  id: TableStringFilterInput
+  summaryID: TableStringFilterInput
+}
+
+input TableMusicFilterInput {
+  id: TableStringFilterInput
+  summaryID: TableStringFilterInput
+}
+
+input TableResourceFilterInput {
+  id: TableStringFilterInput
+  summaryID: TableStringFilterInput
 }
 
 input TableStringFilterInput {
@@ -56,8 +178,35 @@ input TableSummaryFilterInput {
   summary: TableStringFilterInput
 }
 
+input UpdateCoffeeInput {
+  id: ID
+  country: String
+  name: String
+  roaster: String
+  varietal: String
+  processType: String
+  summaryID: ID
+}
+
+input UpdateMusicInput {
+  id: ID!
+  album: String
+  artist: String
+  song: String
+  summaryID: ID
+  isAlbum: Boolean
+}
+
+input UpdateResourceInput {
+  id: ID
+  display: String
+  url: String
+  summaryID: ID
+}
+
 input UpdateSummaryInput {
   id: String!
+  summary: String!
 }
 
 schema {
